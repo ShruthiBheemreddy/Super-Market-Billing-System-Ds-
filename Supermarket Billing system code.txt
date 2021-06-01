@@ -1,0 +1,509 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+int length=30;
+int size=-1;
+typedef struct node
+{
+    char name[30];
+    int quantity;
+    struct node *next;
+}node;
+node *top,*top1,*tem;
+typedef struct super
+  {
+    char name[40];
+    int price;
+    int quantity;
+}super;
+typedef struct user
+{
+    char username[30];
+    char password[30];
+    long int num;
+    struct user *next;
+ }user;
+user *temp=NULL,*p=NULL,*q=NULL,*ptr=NULL;
+FILE *fp;
+void push(char item[],int qua)
+{
+    tem=(node *)malloc(sizeof(node *));
+    strcpy(tem->name,item);
+    tem->quantity=qua;
+    tem->next=NULL;
+    if(top==NULL)
+    {
+ top=tem;
+    }
+    else
+    {
+ tem->next=top;
+ top=tem;
+    }
+}
+  int pop(super x[50])
+{
+    int sum=0;
+    char n[20];
+    int qua;
+    int i;
+    if(top==NULL)
+    {
+   printf("you didn't choose any item\n");
+   printf("please make sure to choose atleast 1 item\n");
+   return 0;
+    }
+    else
+    {
+    top1=top;
+    printf("the items u have purchased with their quantity are \n");
+    while(top1!=NULL)
+    {
+ strcpy(n,top1->name);
+ qua=top1->quantity;
+  printf("\t%12s",n);
+  printf("\t\t%d\n",qua);
+  for(i=0;i<length;i++)
+   {
+  if(strcmp(x[i].name,n)==0)
+   {
+   sum=sum+x[i].price*qua;
+    }
+    }
+    top1=top1->next;
+}
+}
+    return sum;
+}
+void display(super x[])
+{
+    int i,q,bill;
+    char c[5],item[20];
+    for(i=0;i<length;i++)
+    {
+printf("%12s",x[i].name);
+printf("%20d ",x[i].price);
+ printf("\t%10d ",x[i].quantity);
+ printf("\n");
+    }
+    abcd:
+    printf("press yes to shop the item present in the menu else press no\n");
+    scanf("%s",c);
+    if(strcmp(c,"yes")==0)
+{
+   printf("enter the name of the item and quantity only if they are available in the   menu\n");
+   scanf("%s %d",item,&q);
+   push(item,q);
+   goto abcd;
+}
+    else
+return;
+}
+void search(super x[])
+{
+    char item[30];
+    int i;
+    char c[30];
+    int q;
+    wxyz:
+    printf("enter the name of the item u want to search\n");
+    scanf("%s",item);
+    for(i=0;i<length;i++)
+    {
+            if(strcmp(x[i].name,item)==0)
+        {
+            printf("item you entered is present in the list\n");
+            printf("press yes if u want to purchase the entered item else press no\n");
+            scanf("%s",c);
+            if(strcmp(c,"yes")==0)
+        {
+            size++;
+            printf("enter quantity of the item u want to store\n");
+            scanf("%d",&q);
+   push(item,q);
+             printf("press yes if u want to continue purchase else press no\n");
+            scanf("%s",c);
+             if(strcmp(c,"yes")==0)
+            goto wxyz;
+            else
+            return;
+        }
+        }
+    }
+    printf("not found\n");
+    return;
+
+}
+void add(super x[])
+{
+    char addname[30];
+    int addprice;
+    int addquantity;
+    printf("enter the name of the item u want to add\n");
+    scanf("%s",addname);
+    printf("enter the price of the item\n");
+    scanf("%d",&addprice);
+    printf("enter the quantity of the item either in kgs or pieces");
+    scanf("%d",&addquantity);
+    strcpy(x[length].name,addname);
+    x[length].price=addprice;
+    x[length].quantity=addquantity;
+    length++;
+}
+void edit(super x[])
+{
+    char itemname[30];
+    char edititem[30];
+    int editprice;
+    int editquantity;
+    int p=0;
+    int i;
+    printf("enter the name of the item u want to edit\n");
+    scanf("%s",itemname);
+     for(i=0;i<length;i++)
+    {
+        if(strcmp(x[i].name,itemname)==0)
+        {
+            printf("enter the name of the item to be editted\n");
+            scanf("%s",edititem);
+            printf("enter the price of the item to be editted\n");
+            scanf("%d",&editprice);
+            printf("enter the quantity of the item either in kgs or pieces to be editted");
+            scanf("%d",&editquantity);
+            strcpy(x[i].name,edititem);
+            x[i].price=editprice;
+            x[i].quantity=editquantity;
+            p++;
+        }
+    }
+        if(p==0)
+            printf("the item you entered is not found to edit\n");
+
+}
+void billingreport(super x[])
+{
+    int choice;
+    int sum;
+    float total_sum=0;
+    char username[30];
+    char password[30];
+    sum=pop(x);
+     if(sum==0)
+    {
+        printf("you have not choosen any item so your bill is rupees 0\n");
+     }
+    else{
+        printf("total bill before applying any coupon is:%d",sum);
+        if(sum>1000){
+        printf("\nenter appropriate option as per deals of the day\n");
+        printf("\t\t press 1:shop for rupees 1000 and get 100 CASHBACk\n");
+        printf("\t\tpress 2:shop for 3000 and get 500 pay-tm amount\n");
+        printf("\t\tpress 3:register and get 20 percent cash-back for the first time and   10 percent from next time\n");
+       scanf("%d",&choice);
+       switch(choice)
+    {
+    case 1:{
+            if(sum>=1000)
+                total_sum=sum-100;
+            else
+                total_sum=sum;
+            break;
+    }
+    case 2:{
+            if(sum>=3000)
+            {
+             printf("paytm cashback is successfull for your given number\n");
+              total_sum=sum;
+                break;
+            }
+            else
+            {
+                total_sum=sum;
+                break;
+            }
+    }
+    case 3:{
+             q=p;
+             printf("\n\n");
+             printf("\t\tEnter Username:\n\t\t");
+             scanf("%s",username);
+             printf("\n\t\tEnter Password:\n\t\t");
+             scanf(" %s",password);
+             while(q!=NULL)
+    {
+        if((strcmp(q->username,username)==0) && (strcmp(q->password,password)==0))
+        {
+            printf("\n\t\tLogin successful!\n");
+            total_sum=sum*20/100;
+            return;
+}
+else if((strcmp(q->username,username)==0) && (strcmp(q->password,password)!=0))
+{
+           printf("Password mismatch\n");
+           total_sum=sum;
+           return;
+}
+q=q->next;
+    }
+           printf("Sorry, no such user record was found\n");
+break;
+    }}
+            printf("total BILL:%d\t\t",total_sum);}
+    }
+}
+
+void registe()
+{
+         int password[30],i=0,c[30];
+         temp=(user *)malloc(sizeof(user *));
+    printf("enter user-name\n");
+    scanf("%s",&temp->username);
+    do{
+    printf("enter password\n");\
+    i=0;
+    do{
+    password[i]=getch();
+    if(password[i]=='\r'){
+    password[i]='\0';
+    printf("\n");
+break;
+}
+    printf("*");
+   i++;
+}while(1);
+   printf("confirm your password\n");
+   i=0;
+do{
+    c[i]=getch();
+    if(c[i]=='\r'){ 
+    c[i]='\0';
+    printf("\n");
+    break;
+}
+   printf("*");
+   i++;
+   }while(1);
+
+  if(strcmp(password,c) == 0){
+  strcpy(temp->password,password);
+  break;}
+  printf("password mismatch\n");
+  printf("try again!!\n");
+  }while(1);
+  printf("enter your phone number\n");
+  scanf("%ld",&temp->num);
+  temp->next=NULL;
+   q=p;
+    if(p==NULL)
+    {
+        p=temp;
+    }
+    else
+    {
+     while(q->next!=NULL)
+{
+      q=q->next;
+}
+      q->next=temp;
+    }
+    fp=fopen("users.txt","w");
+    q=p;
+    while(q!=NULL)
+    {
+     fprintf(fp,"%s %s %ld\n",q->username,q->password,q->num);
+ q=q->next;
+    }
+    fclose(fp);
+}
+void main()
+{
+    int choice;
+    super x[50];
+    char aoe[5];
+    char password[10]="sv311";
+    char ep[5];
+    char regist[5];
+    strcpy(x[0].name,"rice");
+    x[0].price=75;
+    x[0].quantity=1;
+    strcpy(x[1].name,"dal");
+    x[1].price=100;
+    x[1].quantity=1;
+    strcpy(x[2].name,"parachute");
+    x[2].price=100;x[2].quantity=1;
+    strcpy(x[3].name,"ashirvad");
+    x[3].price=40;x[3].quantity=1;
+    strcpy(x[4].name,"detergent");
+    x[4].price=134;
+    x[4].quantity=1;
+    strcpy(x[5].name,"oil");
+    x[5].price=90;
+    x[5].quantity=1;
+    strcpy(x[6].name,"body soap");
+    x[6].price=50;
+    x[6].quantity=1;
+    strcpy(x[7].name,"perfume");
+    x[7].price=175;
+    x[7].quantity=1;
+   strcpy(x[8].name,"toothpaste");
+   x[8].price=75;
+   x[8].quantity=1;
+   strcpy(x[9].name,"groundnut");
+   x[9].price=80;x[9].quantity=1;
+    strcpy( x[10].name,"coco-cola");
+    x[10].price=95;
+    x[10].quantity=1;
+    strcpy(x[11].name,"red-label");
+    x[11].price=75;
+    x[11].quantity=1;
+    strcpy( x[12].name,"washing soap");
+    x[12].price=55;
+    x[12].quantity=1;
+    strcpy( x[13].name,"sugar");
+    x[13].price=40;
+    x[13].quantity=1;
+   strcpy(x[14].name,"vegetables");
+   x[14].price=125;
+   x[14].quantity=1;
+   strcpy(x[15].name,"fruits");
+   x[15].price=275;
+   x[15].quantity=1;
+   strcpy( x[16].name,"book");
+   x[16].price=55;
+   x[16].quantity=1;
+   strcpy( x[17].name,"chocolate");
+   x[17].price=10;
+   x[17].quantity=1;
+   strcpy(x[18].name,"ice-cream");
+   x[18].price=95;
+   x[18].quantity=1;
+   strcpy(x[19].name,"moong-dal");
+   x[19].price=75;x[19].quantity=1;
+   strcpy( x[20].name,"eggs");
+   x[20].price=5;
+   x[20].quantity=1;
+   strcpy(x[21].name,"boost");
+   x[21].price=155;x[21].quantity=1;
+   strcpy(x[22].name,"maggi");
+   x[22].price=75;
+   x[22].quantity=1;
+      strcpy(x[23].name,"salt");
+      x[23].price=45;
+      x[23].quantity=1;
+      strcpy(x[24].name,"mirchi-powder");
+      x[24].price=95;x[24].quantity=1;
+      strcpy(x[25].name,"body-lotion");
+      x[25].price=175;
+      x[25].quantity=1;
+     strcpy( x[26].name,"pen");
+     x[26].price=10;x[26].quantity=1;
+     strcpy(x[27].name,"biscuit");
+     x[27].price=20;
+      x[27].quantity=1;
+      strcpy(x[28].name,"chips");
+      x[28].price=25;x[28].quantity=1;
+      strcpy(x[29].name,"bread");
+      x[29].price=45;
+      x[29].quantity=1;
+    fp=fopen("users.txt","r");
+    if(fp==NULL)
+    {
+      p=NULL;
+    }
+    if(fgetc(fp)==EOF)
+    {
+p=NULL;
+    }
+    rewind(fp);
+    temp=(user*)malloc(sizeof(user));
+    while(fscanf(fp,"%s %s %s %f %d",temp->username,temp->password,temp->num)!=EOF)
+{
+ptr=(user*)malloc(sizeof(user));
+strcpy(ptr->username,temp->username);
+strcpy(ptr->password,temp->password);
+ptr->num=temp->num;
+ptr->next=NULL;
+if(p==NULL)
+   p=ptr;
+else
+{
+ptr->next=p;
+p=ptr;
+}
+}
+fclose(fp);
+    printf("\t========================================================================\n\n");
+    printf("\t-----------------------------WELCOME TO BIG BASKET------------------------");
+    do
+    {
+    rst:
+    printf("\n\t\tselect the appropriate option\n");
+    printf("\n\t\t1:Display the menu\n");
+    printf("\n\t\t2:search the item\n");
+    printf("\n\t\t3:add or edit item\n");
+    printf("\n\t\t4:view offers\n");
+    printf("\n\t\t5:Billing report\n");
+    scanf("%d",&choice);
+   switch(choice)
+   {
+       case 1:
+display(x);
+break;
+       case 2:
+search(x);
+break;
+       case 3:
+   printf("add or edit is possible if u know the password\n");
+   printf("enter YES if u know the password else press NO\n");
+   scanf("%s",ep);
+   if(strcmp(ep,"yes")==0)
+   {
+   printf("enter password\n");
+   scanf("%s",password);
+   if(strcmp(password,"sv311")==0)
+   {
+   pqr:
+   printf("choose either to ADD or EDIT the item\n");
+   scanf("%s",aoe);
+   if((strcmp(aoe,"add"))==0)
+   {
+add(x);
+   }
+   else if((strcmp(aoe,"edit"))==0)
+   {
+edit(x);
+   }
+   else
+   {
+printf("invalid option\n");
+printf("enter either ADD or EDIT\n");
+goto pqr;
+   }
+   }
+   }
+   else
+goto rst;
+   break;
+       case 4:
+   printf("\t\t1:shop for rupees 1000 and get 100 CASHBACk\n");
+   printf("\t\t2:shop for 3000 and get 500 paytm amount\n");
+   printf("\t\t3:register and get 20 percent cashback for the first time and 10 percent from next time\n");
+   printf("please enter yes if u want to register else no\n");
+   scanf("%s",&regist);
+   if(strcmp(regist,"yes")==0)
+registe();
+   else
+   break;
+       case 5:
+
+   billingreport(x);
+   break;
+
+case 6:printf("invalid option\n");
+break;
+   }
+    }
+   while(choice!=6);
+   printf("\t\t\tTHANKYOU!!!!VISIT AGAIN\n");
+
+}
